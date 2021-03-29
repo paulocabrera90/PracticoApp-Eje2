@@ -16,21 +16,19 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        acceder();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void acceder(){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&  checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
-                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},1000 );
-            }
 
             Uri llamadas = Uri.parse("content://call_log/calls");
         ContentResolver contenedor = getContentResolver();
-        Cursor cursor = contenedor.query(llamadas,null,null,null);
+        Cursor cursor = contenedor.query(llamadas,null,null,null,null);
 
         String nro=null;
         String tiempo=null;
