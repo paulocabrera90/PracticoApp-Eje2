@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,36 +22,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        acceder();
-    }
-
-    private void acceder(){
-
-            Uri llamadas = Uri.parse("content://call_log/calls");
-        ContentResolver contenedor = getContentResolver();
-        Cursor cursor = contenedor.query(llamadas,null,null,null,null);
-
-        String nro=null;
-        String tiempo=null;
-        String nombre = null;
-        String apellido = null;
-        String mensaje = null;
-
-        if(cursor.getCount()>0){
-            while(cursor.moveToNext()){
-
-                nro= cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
-                tiempo= cursor.getString(cursor.getColumnIndex(CallLog.Calls.DATE));
-          //      nombre= cursor.getString(cursor.getColumnIndex(Contacts.));
-                apellido= cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NUMBER_LABEL));
-                mensaje= cursor.getString(cursor.getColumnIndex(CallLog.Calls.FEATURES));
-
-                Log.d("nro ", nro);
-                Log.d("tiempo ", tiempo);
-                Log.d("apellido ", apellido);
-                Log.d("mensaje ", mensaje);
-
-            }
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.READ_CALL_LOG)
+                !=PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG},1000);
         }
+
+
+        Intent i = new Intent(this, ServicioMensaje.class);
+        startService(i);
     }
+
+
 }
